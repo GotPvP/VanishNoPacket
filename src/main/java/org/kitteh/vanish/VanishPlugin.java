@@ -17,6 +17,9 @@
  */
 package org.kitteh.vanish;
 
+import ninja.coelho.arkjs.ArkJsPlugin;
+import ninja.coelho.arkjs.extern.redis.RedisAccessor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,6 +53,8 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
     private final HookManager hookManager = new HookManager(this);
     private VanishManager manager;
     private boolean paper;
+    private ArkJsPlugin arkJs;
+    private RedisAccessor redis;
 
     /**
      * Informs VNP that a user has closed their fake chest
@@ -282,6 +287,9 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
             this.hookManager.getHook(HookType.squaremap).onEnable();
         }
 
+        arkJs = (ArkJsPlugin) Bukkit.getPluginManager().getPlugin("ArkJs");
+        redis = arkJs.getSystemContext().getRedisAccessorFactory().createOrGetAccessor("vanish");
+
         final VanishPlugin self = this;
 
         this.manager = new VanishManager(this);
@@ -301,6 +309,10 @@ public final class VanishPlugin extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(new ListenServerPing(this.manager), this);
 
         this.getLogger().info(this.getCurrentVersion() + " loaded.");
+    }
+
+    public RedisAccessor getRedis() {
+        return redis;
     }
 
     @EventHandler

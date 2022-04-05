@@ -65,6 +65,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>ninja.coelho.arkjs</groupId>
+            <artifactId>ArkJs</artifactId>
+            <version>1.0.1</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/../OPBlocks/lib/ArkJs-v1.16+.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>us.dynmap</groupId>
             <artifactId>dynmap-api</artifactId>
             <version>3.3</version>

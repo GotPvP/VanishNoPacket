@@ -21,6 +21,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.metadata.LazyMetadataValue;
 import org.bukkit.metadata.LazyMetadataValue.CacheStrategy;
@@ -29,21 +30,38 @@ import org.kitteh.vanish.VanishCheck;
 import org.kitteh.vanish.VanishPerms;
 import org.kitteh.vanish.VanishPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public final class ListenPlayerJoin implements Listener {
     private final VanishPlugin plugin;
+    private List<UUID> redisVanished = new ArrayList<>();
 
     public ListenPlayerJoin(@NonNull VanishPlugin instance) {
         this.plugin = instance;
     }
 
     @EventHandler(priority = EventPriority.LOW)
+    public void onPreLogin(@NonNull AsyncPlayerPreLoginEvent event) {
+        if(plugin.getRedis().exists("vanished-" + event.getUniqueId())) {
+            if((boolean) plugin.getRedis().get("vanished-" + event.getUniqueId())) {
+                redisVanished.add(event.getUniqueId());
+                System.out.println("added to vanish");
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoinEarly(@NonNull PlayerJoinEvent event) {
         event.getPlayer().setMetadata("vanished", new LazyMetadataValue(this.plugin, CacheStrategy.NEVER_CACHE, new VanishCheck(this.plugin.getManager(), event.getPlayer().getName())));
         this.plugin.getManager().resetSeeing(event.getPlayer());
-        if (VanishPerms.joinVanished(event.getPlayer())) {
+        System.out.println("checking vanish");
+        if (VanishPerms.joinVanished(event.getPlayer()) || redisVanished.contains(event.getPlayer().getUniqueId())) {
             this.plugin.getManager().toggleVanishQuiet(event.getPlayer(), false);
             this.plugin.hooksVanish(event.getPlayer());
         }
+        redisVanished.remove(event.getPlayer().getUniqueId());
         this.plugin.hooksJoin(event.getPlayer());
     }
 

@@ -18,11 +18,7 @@
 package org.kitteh.vanish;
 
 import com.google.common.collect.ImmutableSet;
-import org.bukkit.ChatColor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -304,6 +300,7 @@ public final class VanishManager {
             }
         }
         this.plugin.getServer().getPluginManager().callEvent(new VanishStatusChangeEvent(vanishingPlayer, vanishing));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getRedis().set("vanished-" + vanishingPlayer.getUniqueId(), vanishing));
         vanishingPlayer.sendPluginMessage(this.plugin, VanishManager.VANISH_PLUGIN_CHANNEL, vanishing ? new byte[]{0x01} : new byte[]{0x00});
         final java.util.Collection<? extends Player> playerList = this.plugin.getServer().getOnlinePlayers();
         for (final Player otherPlayer : playerList) {
