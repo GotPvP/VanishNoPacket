@@ -47,7 +47,6 @@ public final class ListenPlayerJoin implements Listener {
         if(plugin.getRedis().exists("vanished-" + event.getUniqueId())) {
             if((boolean) plugin.getRedis().get("vanished-" + event.getUniqueId())) {
                 redisVanished.add(event.getUniqueId());
-                System.out.println("added to vanish");
             }
         }
     }
@@ -56,7 +55,6 @@ public final class ListenPlayerJoin implements Listener {
     public void onPlayerJoinEarly(@NonNull PlayerJoinEvent event) {
         event.getPlayer().setMetadata("vanished", new LazyMetadataValue(this.plugin, CacheStrategy.NEVER_CACHE, new VanishCheck(this.plugin.getManager(), event.getPlayer().getName())));
         this.plugin.getManager().resetSeeing(event.getPlayer());
-        System.out.println("checking vanish");
         if (VanishPerms.joinVanished(event.getPlayer()) || redisVanished.contains(event.getPlayer().getUniqueId())) {
             this.plugin.getManager().toggleVanishQuiet(event.getPlayer(), false);
             this.plugin.hooksVanish(event.getPlayer());
