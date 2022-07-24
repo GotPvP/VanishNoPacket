@@ -281,24 +281,24 @@ public final class VanishManager {
             }
             this.plugin.getLogger().info(vanishingPlayerName + " reappeared.");
         }
-        if (effects) {
-            final Location oneUp = vanishingPlayer.getLocation().add(0, 1, 0);
-            if (VanishPerms.canEffectSmoke(vanishingPlayer)) {
-                this.effectSmoke(vanishingPlayer.getLocation());
-            }
-            if (VanishPerms.canEffectExplode(vanishingPlayer)) {
-                this.effectExplosion(vanishingPlayer);
-            }
-            if (VanishPerms.canEffectLightning(vanishingPlayer)) {
-                this.effectLightning(vanishingPlayer.getLocation());
-            }
-            if (VanishPerms.canEffectFlames(vanishingPlayer)) {
-                this.effectFlames(oneUp);
-            }
-            if (VanishPerms.canEffectBats(vanishingPlayer)) {
-                this.effectBats(oneUp);
-            }
-        }
+//        if (effects) {
+//            final Location oneUp = vanishingPlayer.getLocation().add(0, 1, 0);
+//            if (VanishPerms.canEffectSmoke(vanishingPlayer)) {
+//                this.effectSmoke(vanishingPlayer.getLocation());
+//            }
+//            if (VanishPerms.canEffectExplode(vanishingPlayer)) {
+//                this.effectExplosion(vanishingPlayer);
+//            }
+//            if (VanishPerms.canEffectLightning(vanishingPlayer)) {
+//                this.effectLightning(vanishingPlayer.getLocation());
+//            }
+//            if (VanishPerms.canEffectFlames(vanishingPlayer)) {
+//                this.effectFlames(oneUp);
+//            }
+//            if (VanishPerms.canEffectBats(vanishingPlayer)) {
+//                this.effectBats(oneUp);
+//            }
+//        }
         this.plugin.getServer().getPluginManager().callEvent(new VanishStatusChangeEvent(vanishingPlayer, vanishing));
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> plugin.getRedis().set("vanished-" + vanishingPlayer.getUniqueId(), vanishing));
         vanishingPlayer.sendPluginMessage(this.plugin, VanishManager.VANISH_PLUGIN_CHANNEL, vanishing ? new byte[]{0x01} : new byte[]{0x00});
