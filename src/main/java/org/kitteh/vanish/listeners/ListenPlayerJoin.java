@@ -55,7 +55,7 @@ public final class ListenPlayerJoin implements Listener {
     public void onPlayerJoinEarly(@NonNull PlayerJoinEvent event) {
         event.getPlayer().setMetadata("vanished", new LazyMetadataValue(this.plugin, CacheStrategy.NEVER_CACHE, new VanishCheck(this.plugin.getManager(), event.getPlayer().getName())));
         this.plugin.getManager().resetSeeing(event.getPlayer());
-        if (VanishPerms.joinVanished(event.getPlayer()) || redisVanished.contains(event.getPlayer().getUniqueId())) {
+        if (redisVanished.contains(event.getPlayer().getUniqueId())) {
             this.plugin.getManager().toggleVanishQuiet(event.getPlayer(), false);
             this.plugin.hooksVanish(event.getPlayer());
         }
@@ -66,7 +66,7 @@ public final class ListenPlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerJoinLate(@NonNull PlayerJoinEvent event) {
         final StringBuilder statusUpdate = new StringBuilder();
-        if (VanishPerms.joinVanished(event.getPlayer())) {
+        if (redisVanished.contains(event.getPlayer().getUniqueId())) {
             String message = ChatColor.DARK_AQUA + "You have joined vanished.";
             if (VanishPerms.canVanish(event.getPlayer())) {
                 message += " To appear: /vanish";
