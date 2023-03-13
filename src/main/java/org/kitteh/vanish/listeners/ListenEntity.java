@@ -58,7 +58,7 @@ public final class ListenEntity implements Listener {
                     player = (Player) projectile.getShooter();
                 }
             }
-            if ((player != null) && this.plugin.getManager().isVanished(player) && VanishPerms.blockOutgoingDamage(player)) {
+            if ((player != null) && this.plugin.getManager().isVanished(player) /*&& VanishPerms.blockOutgoingDamage(player)*/) {
                 event.setCancelled(true);
             }
         }
